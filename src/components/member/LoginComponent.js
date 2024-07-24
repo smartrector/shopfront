@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import loginSlice, { login } from "../../slice/loginSlice";
+import loginSlice, { login, loginPostAsync } from "../../slice/loginSlice";
 
 const initState = {
   email: "",
@@ -23,7 +23,9 @@ function LoginComponent() {
 
   const handleClickLogin = (e) => {
     e.preventDefault();
-    dispatch(login(loginParam));
+    // dispatch(login(loginParam));
+
+    dispatch(loginPostAsync(loginParam));
   };
 
   return (

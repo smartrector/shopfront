@@ -1,8 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { loginPost } from "../api/memberApi";
 
 const initState = {
   email: "",
 };
+
+export const loginPostAsync = createAsyncThunk("loginPostAsync", (param) => {
+  return loginPost(param);
+});
 
 const loginSlice = createSlice({
   name: "loginSlice",
@@ -15,7 +20,20 @@ const loginSlice = createSlice({
     },
     logout: () => {
       console.log("logout...");
+      return { ...initState };
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginPostAsync.fulfilled, () => {
+        console.log("fullfilled");
+      })
+      .addCase(loginPostAsync.pending, () => {
+        console.log("pending");
+      })
+      .addCase(loginPostAsync.rejected, () => {
+        console.log("reject");
+      });
   },
 });
 
