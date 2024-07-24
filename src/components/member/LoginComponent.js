@@ -25,7 +25,11 @@ function LoginComponent() {
     e.preventDefault();
     // dispatch(login(loginParam));
 
-    dispatch(loginPostAsync(loginParam));
+    dispatch(loginPostAsync(loginParam))
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+      });
   };
 
   return (

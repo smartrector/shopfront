@@ -1,8 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginPost } from "../api/memberApi";
+import { getCookie, setCookie } from "../util/cookieUtil";
 
 const initState = {
   email: "",
+};
+
+const loadMemberCookie = () => {
+  const memberInfo = getCookie("member");
+  return memberInfo;
 };
 
 export const loginPostAsync = createAsyncThunk("loginPostAsync", (param) => {
@@ -11,7 +17,7 @@ export const loginPostAsync = createAsyncThunk("loginPostAsync", (param) => {
 
 const loginSlice = createSlice({
   name: "loginSlice",
-  initialState: initState,
+  initialState: loadMemberCookie() || initState,
   reducers: {
     login: (state, action) => {
       console.log("login...");
@@ -25,8 +31,12 @@ const loginSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginPostAsync.fulfilled, () => {
+      .addCase(loginPostAsync.fulfilled, (state, action) => {
         console.log("fullfilled");
+        const payload = action.payload;
+        if (!payload.error) {
+          setCookie("member", JSON.stringify(payload));
+        }
       })
       .addCase(loginPostAsync.pending, () => {
         console.log("pending");
