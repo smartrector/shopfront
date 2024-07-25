@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import loginSlice, { login, loginPostAsync } from "../../slice/loginSlice";
 import { useNavigate } from "react-router-dom";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 const initState = {
   email: "",
@@ -11,11 +12,10 @@ const initState = {
 function LoginComponent() {
   const [loginParam, setLoginParam] = useState({ ...initState });
 
+  const { doLogin, moveToPath } = useCustomLogin();
+
   const loginState = useSelector((state) => state.loginSlice);
   console.log("emeil" + loginState.email);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     loginParam[e.target.name] = e.target.value;
@@ -27,18 +27,29 @@ function LoginComponent() {
     e.preventDefault();
     // dispatch(login(loginParam));
 
-    dispatch(loginPostAsync(loginParam))
-      .unwrap()
-      .then((data) => {
-        console.log(data);
+    // dispatch(loginPostAsync(loginParam))
+    //   .unwrap()
+    //   .then((data) => {
+    //     console.log(data);
 
-        if (data.error) {
-          alert("이메일과 패스워드 불일치");
-        } else {
-          alert("로그인성공");
-          navigate({ pathname: "/" }, { replace: true });
-        }
-      });
+    //     if (data.error) {
+    //       alert("이메일과 패스워드 불일치");
+    //     } else {
+    //       // alert("로그인성공");
+
+    //       navigate({ pathname: "/" }, { replace: true });
+    //       window.location.reload();
+    //     }
+    //   });
+
+    doLogin(loginParam).then((data) => {
+      if (data.error) {
+        alert("이메일과 패스워드 확인!!!");
+      } else {
+        moveToPath("/");
+        window.location.reload();
+      }
+    });
   };
 
   return (

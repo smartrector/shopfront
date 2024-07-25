@@ -15,6 +15,9 @@ function BasicMenu() {
           <li>
             <Link to="/about">ABOUT</Link>
           </li>
+          <li>
+            <Link to="/product">PRODUCT</Link>
+          </li>
 
           {loginState.email ? (
             <li>
